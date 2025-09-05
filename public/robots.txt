@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://hesabati.com/sitemap.xml
+
+# AdSense crawlers
+User-agent: Mediapartners-Google
+Allow: /
+
+# Disallow admin/analytics pages
+Disallow: /admin/
+Disallow: /analytics/
+Disallow: /api/
+
+# Allow all tools and blog content
+Allow: /tools/
+Allow: /blog/
+Allow: /en/
+Allow: /ar/
