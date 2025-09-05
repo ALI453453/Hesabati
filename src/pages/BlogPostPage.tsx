@@ -6,9 +6,9 @@ import { Calendar, Clock, User, ArrowRight, Tag } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { blogPostsData } from '../data/blogPosts';
 import { t } from '../data/translations';
-import AdSenseUnit from '../components/Blog/AdSenseUnit';
+import DismissibleAd from '../components/Blog/DismissibleAd';
 import FAQSchema from '../components/Blog/FAQSchema';
-import NotFoundPage from './NotFoundPage'; // Assuming a 404 page exists
+import NotFoundPage from './NotFoundPage';
 
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,7 +20,6 @@ const BlogPostPage: React.FC = () => {
   }
 
   const contentParts = post.content[language].split('[AD_SLOT]');
-
   const pageTitle = `${post.title[language]} | Hesabati Blog`;
   const canonicalUrl = `https://hesabati.com/blog/${post.slug}`;
 
@@ -30,11 +29,9 @@ const BlogPostPage: React.FC = () => {
         <title>{pageTitle}</title>
         <meta name="description" content={post.excerpt[language]} />
         <link rel="canonical" href={canonicalUrl} />
-        {/* Hreflang Tags */}
         <link rel="alternate" hreflang="en" href={`https://hesabati.com/en/blog/${post.slug}`} />
         <link rel="alternate" hreflang="ar" href={`https://hesabati.com/ar/blog/${post.slug}`} />
         <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
-        {/* Open Graph */}
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={post.excerpt[language]} />
         <meta property="og:type" content="article" />
@@ -42,7 +39,6 @@ const BlogPostPage: React.FC = () => {
         <meta property="og:image" content={post.featuredImage} />
         <meta property="article:published_time" content={post.publishedAt} />
         <meta property="article:author" content={post.author} />
-        {/* Twitter Cards */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={post.excerpt[language]} />
@@ -53,7 +49,6 @@ const BlogPostPage: React.FC = () => {
       <article className="bg-white dark:bg-gray-900 py-12 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            {/* Header */}
             <header className="mb-8 text-center">
               <div className="mb-4">
                 <Link to={`/tools/${post.relatedTool}`} className="text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wider text-sm">
@@ -79,11 +74,9 @@ const BlogPostPage: React.FC = () => {
               </div>
             </header>
 
-            {/* Featured Image */}
-            <img src={post.featuredImage} alt={post.title[language]} className="w-full h-auto max-h-96 object-cover rounded-2xl shadow-lg mb-8" />
+            <img loading="lazy" src={post.featuredImage} alt={post.title[language]} className="w-full h-auto max-h-96 object-cover rounded-2xl shadow-lg mb-8" />
           </motion.div>
 
-          {/* Content */}
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
@@ -93,12 +86,11 @@ const BlogPostPage: React.FC = () => {
             {contentParts.map((part, index) => (
               <Fragment key={index}>
                 <div dangerouslySetInnerHTML={{ __html: part.replace(/\n/g, '<br />') }} />
-                {index < contentParts.length - 1 && <AdSenseUnit type="in-article" />}
+                {index < contentParts.length - 1 && <DismissibleAd adId={`${slug}-article-${index}`} type="in-article" />}
               </Fragment>
             ))}
           </motion.div>
 
-          {/* Related Tool Link */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -117,7 +109,6 @@ const BlogPostPage: React.FC = () => {
             </Link>
           </motion.div>
 
-          {/* Tags */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 

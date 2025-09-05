@@ -15,15 +15,16 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden group"
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden group h-full flex flex-col"
     >
-      <a href={`/blog/${post.slug}`} className="block">
+      <a href={`/blog/${post.slug}`} className="block h-full flex flex-col">
         <img
+          loading="lazy"
           src={post.featuredImage}
           alt={post.title[language]}
           className="w-full h-48 object-cover"
         />
-        <div className="p-6">
+        <div className="p-6 flex flex-col flex-grow">
           <div className="flex items-center space-x-4 rtl:space-x-reverse text-sm text-gray-500 dark:text-gray-400 mb-2">
             <div className="flex items-center space-x-1 rtl:space-x-reverse">
               <Calendar className="w-4 h-4" />
@@ -34,13 +35,13 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
               <span>{post.readTime} {t('readTime', language)}</span>
             </div>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 flex-grow">
             {post.title[language]}
           </h3>
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
             {post.excerpt[language]}
           </p>
-          <div className="flex items-center justify-between text-primary-600 dark:text-primary-400 font-semibold">
+          <div className="mt-auto flex items-center justify-between text-primary-600 dark:text-primary-400 font-semibold">
             <span>{t('readMore', language)}</span>
             <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
           </div>
@@ -50,4 +51,4 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   );
 };
 
-export default BlogPostCard;
+export default React.memo(BlogPostCard);

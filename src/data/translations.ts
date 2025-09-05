@@ -10,6 +10,7 @@ export const translations = {
     privacy: 'Privacy Policy',
     terms: 'Terms of Service',
     faq: 'FAQ',
+    advertise: 'Advertise',
     
     // Hero Section
     heroTitle: 'Your Global Multi-Tools Platform',
@@ -94,6 +95,7 @@ export const translations = {
     privacy: 'سياسة الخصوصية',
     terms: 'شروط الخدمة',
     faq: 'الأسئلة الشائعة',
+    advertise: 'أعلن معنا',
     
     // Hero Section
     heroTitle: 'منصة الأدوات المتعددة العالمية',

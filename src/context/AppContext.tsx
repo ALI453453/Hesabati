@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AppContext, Language, AnalyticsData, Tool, ErrorLog } from '../types';
+import { AppContext, Language, AnalyticsData, Tool, ErrorLog, ClickEvent } from '../types';
 import { toolsData } from '../data/tools';
 
 const defaultAnalytics: AnalyticsData = {
@@ -11,7 +11,8 @@ const defaultAnalytics: AnalyticsData = {
   userSessions: 0,
   bounceRate: 0,
   avgSessionDuration: 0,
-  errors: []
+  errors: [],
+  clickEvents: []
 };
 
 const AppContextProvider = createContext<AppContext | undefined>(undefined);
@@ -37,22 +38,23 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     const savedLang = localStorage.getItem('hesabati-language') as Language;
     const savedTheme = localStorage.getItem('hesabati-theme') as 'light' | 'dark';
-    const savedAnalytics = localStorage.getItem('hesabati-analytics');
+    let savedAnalytics;
+    try {
+      savedAnalytics = JSON.parse(localStorage.getItem('hesabati-analytics') || 'null');
+    } catch {
+      savedAnalytics = null;
+    }
 
     if (savedLang) setLanguage(savedLang);
     if (savedTheme) setTheme(savedTheme);
     if (savedAnalytics) {
-      try {
-        setAnalytics(JSON.parse(savedAnalytics));
-      } catch (error) {
-        console.error('Failed to parse saved analytics:', error);
-      }
+      setAnalytics(prev => ({ ...prev, ...savedAnalytics }));
     }
 
     // Detect user's preferred language
     if (!savedLang) {
       const browserLang = navigator.language.toLowerCase();
-      if (browserLang.includes('ar')) {
+      if (browserLang.startsWith('ar')) {
         setLanguage('ar');
       }
     }
@@ -62,6 +64,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(prefersDark ? 'dark' : 'light');
     }
+
+    // Track user session
+    if (!sessionStorage.getItem('hesabati-session-active')) {
+      setAnalytics(prev => ({
+        ...prev,
+        userSessions: (prev.userSessions || 0) + 1,
+      }));
+      sessionStorage.setItem('hesabati-session-active', 'true');
+    }
+
   }, []);
 
   // Save to localStorage when values change
@@ -84,14 +96,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const trackToolUsage = (toolId: string) => {
     setAnalytics(prev => {
       const newAnalytics = { ...prev };
-      newAnalytics.totalUsage += 1;
+      newAnalytics.totalUsage = (newAnalytics.totalUsage || 0) + 1;
       newAnalytics.toolsUsage[toolId] = (newAnalytics.toolsUsage[toolId] || 0) + 1;
       
-      // Update daily usage (last 30 days)
-      const today = new Date().getDate() - 1;
-      newAnalytics.dailyUsage[today] += 1;
+      const today = new Date().getDay(); // Simple daily tracking
+      const newDailyUsage = [...(newAnalytics.dailyUsage || Array(7).fill(0))];
+      newDailyUsage[today] = (newDailyUsage[today] || 0) + 1;
+      newAnalytics.dailyUsage = newDailyUsage;
       
-      // Update popular tools
       const sortedTools = toolsData
         .map(tool => ({
           ...tool,
@@ -104,15 +116,20 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       
       return newAnalytics;
     });
+  };
 
-    // Google Analytics tracking
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'tool_usage', {
-        event_category: 'Tools',
-        event_label: toolId,
-        value: 1
-      });
-    }
+  const trackClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    const newClick: ClickEvent = {
+      x: event.clientX,
+      y: event.clientY,
+      timestamp: Date.now(),
+      element: target.tagName.toLowerCase() + (target.id ? `#${target.id}` : '') + (target.className ? `.${target.className.toString().split(' ')[0]}` : '')
+    };
+    setAnalytics(prev => ({
+      ...prev,
+      clickEvents: [...(prev.clickEvents || []).slice(-99), newClick] // Keep last 100 clicks
+    }));
   };
 
   const logError = (error: string, tool?: string) => {
@@ -127,7 +144,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     setAnalytics(prev => ({
       ...prev,
-      errors: [errorLog, ...prev.errors.slice(0, 99)] // Keep last 100 errors
+      errors: [errorLog, ...(prev.errors || []).slice(0, 99)] // Keep last 100 errors
     }));
 
     console.error('Hesabati Error:', errorLog);
@@ -140,6 +157,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setTheme,
     analytics,
     trackToolUsage,
+    trackClick,
     logError
   };
 

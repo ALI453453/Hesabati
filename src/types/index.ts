@@ -56,6 +56,13 @@ export interface BlogPost {
   }[];
 }
 
+export interface ClickEvent {
+  x: number;
+  y: number;
+  timestamp: number;
+  element: string;
+}
+
 export interface AnalyticsData {
   totalUsage: number;
   dailyUsage: number[];
@@ -66,6 +73,7 @@ export interface AnalyticsData {
   bounceRate: number;
   avgSessionDuration: number;
   errors: ErrorLog[];
+  clickEvents: ClickEvent[];
 }
 
 export interface ErrorLog {
@@ -86,5 +94,6 @@ export interface AppContext {
   setTheme: (theme: 'light' | 'dark') => void;
   analytics: AnalyticsData;
   trackToolUsage: (toolId: string) => void;
+  trackClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   logError: (error: string, tool?: string) => void;
 }

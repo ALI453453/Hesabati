@@ -1,7 +1,8 @@
 import React from 'react';
-import { Calculator, Facebook, Twitter, Instagram, Youtube, Mail } from 'lucide-react';
+import { Calculator, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { t } from '../../data/translations';
+import DismissibleAd from '../Blog/DismissibleAd';
 
 const Footer: React.FC = () => {
   const { language } = useAppContext();
@@ -27,7 +28,8 @@ const Footer: React.FC = () => {
 
   const legal = [
     { name: t('privacy', language), href: '/privacy' },
-    { name: t('terms', language), href: '/terms' }
+    { name: t('terms', language), href: '/terms' },
+    { name: t('advertise', language) || 'Advertise', href: '/advertise' }
   ];
 
   const socialMedia = [
@@ -39,18 +41,14 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-gray-900 dark:bg-black text-white">
-      {/* AdSense Footer Banner */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="h-20 bg-gray-800 rounded flex items-center justify-center text-sm text-gray-400">
-            AdSense Footer Banner (728x90)
-          </div>
+          <DismissibleAd adId="footer-banner" type="display" />
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-2 rtl:space-x-reverse mb-4">
               <div className="bg-primary-600 p-2 rounded-lg">
@@ -70,7 +68,6 @@ const Footer: React.FC = () => {
               }
             </p>
             
-            {/* Newsletter */}
             <div className="mb-6">
               <h4 className="text-lg font-semibold mb-2">{t('newsletter', language)}</h4>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -85,7 +82,6 @@ const Footer: React.FC = () => {
               </div>
             </div>
 
-            {/* Social Media */}
             <div>
               <h4 className="text-lg font-semibold mb-2">{t('followUs', language)}</h4>
               <div className="flex space-x-4 rtl:space-x-reverse">
@@ -106,7 +102,6 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('quickLinks', language)}</h3>
             <ul className="space-y-2">
@@ -123,7 +118,6 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Categories */}
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('categories', language)}</h3>
             <ul className="space-y-2">
@@ -140,7 +134,6 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Support & Legal */}
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('support', language)}</h3>
             <ul className="space-y-2">
@@ -172,7 +165,6 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom */}
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
@@ -190,4 +182,4 @@ const Footer: React.FC = () => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);

@@ -3,13 +3,8 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Activity, RefreshCw, Calculator, Clock, Users, Star } from 'lucide-react';
 import { Tool } from '../../types';
 import { useAppContext } from '../../context/AppContext';
-import { t } from '../../data/translations';
 
-interface ToolCardProps {
-  tool: Tool;
-}
-
-const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
+const ToolCard: React.FC<{ tool: Tool }> = ({ tool }) => {
   const { language, trackToolUsage } = useAppContext();
 
   const getCategoryIcon = (category: string) => {
@@ -49,25 +44,22 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 overflow-hidden group"
+      className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 overflow-hidden group h-full flex flex-col"
     >
-      <div className="p-6">
-        {/* Header */}
+      <div className="p-6 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-4">
           <div className={`p-3 rounded-xl ${getCategoryColor(tool.category)}`}>
             <CategoryIcon className="w-6 h-6" />
           </div>
-          
           {tool.featured && (
-            <div className="flex items-center space-x-1 rtl:space-x-reverse bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-1 rounded-full text-xs">
+            <div className="flex items-center space-x-1 rtl:space-x-reverse bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-1 rounded-full text-xs font-medium">
               <Star className="w-3 h-3" />
               <span>{language === 'ar' ? 'مميز' : 'Featured'}</span>
             </div>
           )}
         </div>
 
-        {/* Title and Description */}
-        <div className="mb-4">
+        <div className="mb-4 flex-grow">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
             {tool.title[language]}
           </h3>
@@ -76,60 +68,27 @@ const ToolCard: React.FC<ToolCardProps> = ({ tool }) => {
           </p>
         </div>
 
-        {/* Metadata */}
         <div className="flex items-center justify-between mb-4 text-xs">
-          <div className={`px-2 py-1 rounded-full ${getDifficultyColor(tool.difficulty)}`}>
+          <div className={`px-2 py-1 rounded-full font-medium ${getDifficultyColor(tool.difficulty)}`}>
             {language === 'ar' 
               ? tool.difficulty === 'easy' ? 'سهل' : tool.difficulty === 'medium' ? 'متوسط' : 'متقدم'
               : tool.difficulty
             }
           </div>
-          
-          <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-500 dark:text-gray-400">
-            <div className="flex items-center space-x-1 rtl:space-x-reverse">
-              <Users className="w-3 h-3" />
-              <span>{tool.usageCount.toLocaleString()}</span>
-            </div>
-            
-            {tool.lastUsed && (
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Clock className="w-3 h-3" />
-                <span>{new Date(tool.lastUsed).toLocaleDateString()}</span>
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Tags */}
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-1">
-            {tool.keywords[language].slice(0, 3).map((keyword, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full"
-              >
-                {keyword}
-              </span>
-            ))}
-            {tool.keywords[language].length > 3 && (
-              <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
-                +{tool.keywords[language].length - 3}
-              </span>
-            )}
-          </div>
+        <div className="mt-auto">
+          <a
+            href={`/tools/${tool.slug}`}
+            onClick={handleToolClick}
+            className="block w-full bg-primary-600 hover:bg-primary-700 text-white text-center py-3 rounded-xl font-medium transition-all duration-300 group-hover:bg-primary-700"
+          >
+            {language === 'ar' ? 'استخدم الأداة' : 'Use Tool'}
+          </a>
         </div>
-
-        {/* Action Button */}
-        <a
-          href={`/tools/${tool.slug}`}
-          onClick={handleToolClick}
-          className="block w-full bg-primary-600 hover:bg-primary-700 text-white text-center py-3 rounded-xl font-medium transition-all duration-300 group-hover:bg-primary-700"
-        >
-          {language === 'ar' ? 'استخدم الأداة' : 'Use Tool'}
-        </a>
       </div>
     </motion.div>
   );
 };
 
-export default ToolCard;
+export default React.memo(ToolCard);

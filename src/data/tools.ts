@@ -485,5 +485,38 @@ export const toolsData: Tool[] = [
       en: ['password', 'security', 'generator', 'strong', 'encryption'],
       ar: ['كلمة مرور', 'أمان', 'مولد', 'قوي', 'تشفير']
     }
+  },
+  {
+    id: 'image-compressor',
+    slug: 'image-compressor',
+    title: { en: 'Image Compressor', ar: 'ضاغط الصور' },
+    description: { en: 'Reduce the file size of your images without losing quality.', ar: 'قلل حجم ملف صورك دون فقدان الجودة.' },
+    category: 'conversion',
+    icon: 'Minimize2',
+    usageCount: 0,
+    difficulty: 'easy',
+    keywords: { en: ['image', 'compress', 'optimizer', 'jpeg', 'png'], ar: ['صورة', 'ضغط', 'محسن', 'jpeg', 'png'] }
+  },
+  {
+    id: 'image-converter',
+    slug: 'image-converter',
+    title: { en: 'Image Converter', ar: 'محول الصور' },
+    description: { en: 'Convert images to different formats like JPG, PNG, and WebP.', ar: 'حول الصور إلى صيغ مختلفة مثل JPG و PNG و WebP.' },
+    category: 'conversion',
+    icon: 'ImageIcon',
+    usageCount: 0,
+    difficulty: 'easy',
+    keywords: { en: ['image', 'convert', 'jpg', 'png', 'webp', 'format'], ar: ['صورة', 'تحويل', 'jpg', 'png', 'webp', 'صيغة'] }
+  },
+  {
+    id: 'pdf-converter',
+    slug: 'pdf-converter',
+    title: { en: 'Image to PDF Converter', ar: 'محول الصور إلى PDF' },
+    description: { en: 'Combine multiple images into a single, easy-to-share PDF file.', ar: 'اجمع عدة صور في ملف PDF واحد سهل المشاركة.' },
+    category: 'conversion',
+    icon: 'FileText',
+    usageCount: 0,
+    difficulty: 'easy',
+    keywords: { en: ['pdf', 'image to pdf', 'converter', 'jpg to pdf', 'png to pdf'], ar: ['pdf', 'صورة إلى pdf', 'محول', 'jpg إلى pdf', 'png إلى pdf'] }
   }
 ];
