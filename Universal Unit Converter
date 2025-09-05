@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Universal Unit Converter</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    label, select, input { margin: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Universal Unit Converter</h1>
+  <input type="number" id="value" placeholder="Enter value">
+  <select id="from">
+    <option value="cm">Centimeters</option>
+    <option value="m">Meters</option>
+  </select>
+  to
+  <select id="to">
+    <option value="m">Meters</option>
+    <option value="cm">Centimeters</option>
+  </select>
+  <button onclick="convert()">Convert</button>
+  <p id="result"></p>
+
+  <script>
+    function convert() {
+      let value = parseFloat(document.getElementById("value").value);
+      let from = document.getElementById("from").value;
+      let to = document.getElementById("to").value;
+      let result = 0;
+
+      if (from === "cm" && to === "m") result = value / 100;
+      if (from === "m" && to === "cm") result = value * 100;
+      if (from === to) result = value;
+
+      document.getElementById("result").innerText = "Result: " + result;
+    }
+  </script>
+</body>
+</html>
